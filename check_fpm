@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# debug
+# set -x
+
+# Nagios alert status
+STATE_OK=0
+STATE_WARNING=1
+STATE_CRITICAL=2
+STATE_UNKNOWN=3
+
+FPM_CMD="/etc/init.d/php-fpm status"
+FPM_STATUS=$(echo "$?")
+
+if [[ "$FPM_STATUS" -eq 3 ]]; then
+	echo "CRITICAL - PHP-FPM is not running !"
+	exit "$STATE_CRITICAL"
+elif [[ "$FPM_STATUS" -ne 0 ]]; then
+	echo "UNKNOWN - PHP-FPM status return code is not 0 or 3."
+	exit "$STATE_UNKNOWN"
+else
+	echo "OK"
+	exit "$STATE_OK"
+fi
